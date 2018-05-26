@@ -15,8 +15,7 @@ import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.ialistannen.jvmagentutils.ExternalLibraryUtils;
-import org.apache.commons.lang3.JavaVersion;
-import org.apache.commons.lang3.SystemUtils;
+import me.ialistannen.jvmagentutils.OsUtils;
 
 class AgentRunner {
 
@@ -42,7 +41,7 @@ class AgentRunner {
       return;
     }
 
-    if (!SystemUtils.isJavaVersionAtLeast(JavaVersion.JAVA_9)) {
+    if (Integer.parseInt(OsUtils.getCurrentJavaVersion()) > 8) {
       LOGGER.info(attachPrefix("Attaching to same JVM..."));
       attachJavaToSameJVM(agentJar, pid, arguments);
       return;

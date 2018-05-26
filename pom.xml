@@ -9,7 +9,7 @@
   <version>1.0-SNAPSHOT</version>
 
 
-  <description>Adds an event that fires when TNT spawns.</description>
+  <description>Allow attaching to live JVMs as long as you have a tools jar. Sigh.</description>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -80,6 +80,7 @@
         <toolsjar>${java.home}/../lib/tools.jar</toolsjar>
       </properties>
     </profile>
+
     <profile>
       <id>windows_profile</id>
       <activation>
@@ -116,14 +117,6 @@
       <artifactId>tools</artifactId>
       <version>0</version>
       <scope>compile</scope>
-    </dependency>
-
-    <!--BUKKIT'S APACHE-->
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-lang3</artifactId>
-      <version>3.6</version>
-      <scope>provided</scope>
     </dependency>
   </dependencies>
 </project>
