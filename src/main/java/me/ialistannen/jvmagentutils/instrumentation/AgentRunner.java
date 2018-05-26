@@ -80,7 +80,7 @@ class AgentRunner {
     Attributes mainAttributes = manifest.getMainAttributes();
     mainAttributes.put(Name.MANIFEST_VERSION, "1.0");
     mainAttributes.put(
-        Name.MAIN_CLASS,
+        "Premain-Class",
         "me.ialistannen.me.ialistannen.jvmagentutils.instrumentation.ExternalAgentAttacher"
     );
 
