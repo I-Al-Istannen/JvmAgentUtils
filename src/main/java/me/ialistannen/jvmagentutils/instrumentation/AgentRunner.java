@@ -1,9 +1,5 @@
 package me.ialistannen.jvmagentutils.instrumentation;
 
-import com.sun.tools.attach.AgentInitializationException;
-import com.sun.tools.attach.AgentLoadException;
-import com.sun.tools.attach.AttachNotSupportedException;
-import com.sun.tools.attach.VirtualMachine;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -14,8 +10,6 @@ import java.util.jar.Attributes.Name;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import me.ialistannen.jvmagentutils.ExternalLibraryUtils;
-import me.ialistannen.jvmagentutils.OsUtils;
 
 class AgentRunner {
 
@@ -26,49 +20,23 @@ class AgentRunner {
    *
    * @param agentJar the path to the agent jar
    * @param pid the pid of the JVM to attach to
-   * @param libsDir the path to the directly containing the external libs (e.g. libattach.1.8)
    * @param arguments the arguments for the agent
    */
-  static void run(Path agentJar, int pid, Path libsDir, String arguments)
-      throws IOException, AgentLoadException, AgentInitializationException,
-      AttachNotSupportedException {
-
-    if (Boolean.getBoolean("jdk.attach.allowAttachSelf")) {
-      LOGGER.info(attachPrefix(
-          "Picking self-attachment even if I am running on a newer JVM, as it was specified.."
-      ));
-      attachJavaToSameJVM(agentJar, pid, arguments);
-      return;
-    }
-
-    if (Integer.parseInt(OsUtils.getCurrentJavaVersion()) > 8) {
-      LOGGER.info(attachPrefix("Attaching to same JVM..."));
-      attachJavaToSameJVM(agentJar, pid, arguments);
-      return;
-    }
+  static void run(Path agentJar, int pid, String arguments)
+      throws IOException {
 
     LOGGER.info(attachPrefix("Attaching via an external runner..."));
-    startNewJVMAndAttach(agentJar, pid, libsDir, arguments);
+    startNewJVMAndAttach(agentJar, pid, arguments);
   }
 
-  private static void attachJavaToSameJVM(Path agentJar, int pid, String arguments)
-      throws AttachNotSupportedException, IOException, AgentLoadException,
-      AgentInitializationException {
-
-    VirtualMachine jvm = VirtualMachine.attach(Integer.toString(pid));
-    jvm.loadAgent(agentJar.toAbsolutePath().toString(), arguments);
-    jvm.detach();
-  }
-
-  private static void startNewJVMAndAttach(Path agentJar, int pid, Path libDir, String arguments)
+  private static void startNewJVMAndAttach(Path agentJar, int pid, String arguments)
       throws IOException {
     Path tempFile = Files.createTempFile("TNT-Spawn_external_attacher", ".jar");
     tempFile.toFile().deleteOnExit();
 
     JvmUtils.writeClassesToJar(
         tempFile,
-        generateExternalAttacherManifest(),
-        ExternalAgentAttacher.class, VirtualMachine.class, ExternalLibraryUtils.class
+        generateExternalAttacherManifest()
     );
 
     ProcessBuilder processBuilder = new ProcessBuilder(
@@ -77,7 +45,6 @@ class AgentRunner {
         tempFile.toAbsolutePath().toString(),
         Integer.toString(pid),
         agentJar.toAbsolutePath().toString(),
-        libDir.toAbsolutePath().toString(),
         arguments
     );
 

@@ -66,42 +66,6 @@
     </resources>
   </build>
 
-  <!--https://stackoverflow.com/a/3080695-->
-  <profiles>
-    <profile>
-      <id>linux_profile</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-        <os>
-          <family>unix</family>
-        </os>
-      </activation>
-      <properties>
-        <toolsjar>${java.home}/../lib/tools.jar</toolsjar>
-      </properties>
-    </profile>
-
-    <profile>
-      <id>windows_profile</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-        <os>
-          <family>Windows</family>
-        </os>
-      </activation>
-      <properties>
-        <toolsjar>${java.home}/../lib/tools.jar</toolsjar>
-      </properties>
-    </profile>
-  </profiles>
-
-  <repositories>
-    <repository>
-      <id>local-file-repo</id>
-      <url>file://${basedir}/local-repo</url>
-    </repository>
-  </repositories>
-
   <dependencies>
 
     <!-- https://mvnrepository.com/artifact/org.javassist/javassist -->
@@ -109,13 +73,6 @@
       <groupId>org.javassist</groupId>
       <artifactId>javassist</artifactId>
       <version>3.22.0-GA</version>
-      <scope>compile</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>com.oracle</groupId>
-      <artifactId>tools</artifactId>
-      <version>0</version>
       <scope>compile</scope>
     </dependency>
   </dependencies>
