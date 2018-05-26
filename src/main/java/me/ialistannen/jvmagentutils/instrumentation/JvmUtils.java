@@ -43,7 +43,7 @@ public class JvmUtils {
     Manifest manifest = new Manifest();
     Attributes mainAttributes = manifest.getMainAttributes();
     mainAttributes.put(Attributes.Name.MANIFEST_VERSION, "1.0");
-    mainAttributes.put(new Attributes.Name("Agent-Class"), agentClass.getName());
+    mainAttributes.put(new Attributes.Name("Premain-Class"), agentClass.getName());
     mainAttributes.put(new Attributes.Name("Can-Retransform-Classes"), "true");
     mainAttributes.put(new Attributes.Name("Can-Redefine-Classes"), "true");
 
